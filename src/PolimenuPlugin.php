@@ -1,15 +1,15 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace Detit\Polimenu;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class SkeletonPlugin implements Plugin
+class PolimenuPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton';
+        return 'polimenu';
     }
 
     public function register(Panel $panel): void
