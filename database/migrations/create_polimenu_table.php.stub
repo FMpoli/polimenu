@@ -8,12 +8,22 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('polimenu_table', function (Blueprint $table) {
+        Schema::create('polimenu_menus', function (Blueprint $table) {
             $table->id();
-
-            // add fields
-
+            $table->json('name');                               // Nome del menu
+            $table->json('handle')->unique();                   // Handle univoco del menu
+            $table->json('items');                              // Campo JSON per gli items
+            $table->boolean('is_published')->default(true);     // Stato di pubblicazione
             $table->timestamps();
+            $table->softDeletes();
         });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('polimenu_table');
     }
 };

@@ -2,8 +2,9 @@
 
 namespace Detit\Polimenu;
 
-use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Filament\Contracts\Plugin;
+use Detit\Polimenu\Resources\MenuResource;
 
 class PolimenuPlugin implements Plugin
 {
@@ -14,7 +15,10 @@ class PolimenuPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        //
+        $panel
+            ->resources([
+                MenuResource::class,
+            ]);
     }
 
     public function boot(Panel $panel): void
