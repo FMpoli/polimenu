@@ -128,36 +128,36 @@ class MenuResource extends Resource
     {
         return [
             // Definisci qui le relazioni, ad esempio:
-            // RelationManagers\NewsRelationManager::class,
+            // RelationManagers\MenuRelationManager::class,
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMenu::route('/'),
-            'create' => Pages\CreateMenu::route('/create'),
-            'edit' => Pages\EditMenu::route('/{record}/edit'),
+            'index' => MenuResource\Pages\ListMenu::route('/'),
+            'create' => MenuResource\Pages\CreateMenu::route('/create'),
+            'edit' => MenuResource\Pages\EditMenu::route('/{record}/edit'),
         ];
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('Categories');
+        return __('Menu');
     }
 
     public static function getPluralLabel(): ?string
     {
-        return __('Categories');
+        return __('Menu');
     }
 
     public static function getLabel(): ?string
     {
-        return __('Category');
+        return __('Menu');
     }
 
     public static function getModelLabel(): string
     {
-        return __('Category');
+        return __('Menu');
     }
 }

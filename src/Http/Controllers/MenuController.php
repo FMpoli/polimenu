@@ -2,10 +2,10 @@
 
 namespace Detit\Polimenu\Http\Controllers;
 
-use Detit\Polinews\Models\Menu;
+use Detit\Polimenu\Models\Menu;
 use Illuminate\Routing\Controller;
 
-class NewsController extends Controller
+class MenuController extends Controller
 {
 
     public function show($handle)
