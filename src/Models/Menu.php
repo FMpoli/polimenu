@@ -31,7 +31,6 @@ class Menu extends Model
     ];
 
     protected $translatable = [
-        'name',
         'items',
     ];
 

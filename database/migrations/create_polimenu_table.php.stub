@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('polimenu_menus', function (Blueprint $table) {
             $table->id();
-            $table->json('name');                               // Nome del menu
-            $table->json('handle')->unique();                   // Handle univoco del menu
+            $table->string('name');                               // Nome del menu
+            $table->string('handle')->unique();                   // Handle univoco del menu
             $table->json('items');                              // Campo JSON per gli items
             $table->boolean('is_published')->default(true);     // Stato di pubblicazione
             $table->timestamps();
