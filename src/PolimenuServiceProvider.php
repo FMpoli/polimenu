@@ -12,7 +12,8 @@ use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Detit\Polimenu\Commands\PolimenuCommand;
-use Detit\Polimenu\Testing\TestsPolimenu;
+use Illuminate\Support\Facades\Blade;
+use Detit\Polimenu\Components\Menu;
 
 class PolimenuServiceProvider extends PackageServiceProvider
 {
@@ -29,6 +30,7 @@ class PolimenuServiceProvider extends PackageServiceProvider
          */
         $package->name(static::$name)
             ->hasCommands($this->getCommands())
+            ->hasRoute('web')
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()
@@ -83,8 +85,7 @@ class PolimenuServiceProvider extends PackageServiceProvider
             }
         }
 
-        // Testing
-        // Testable::mixin(new TestsPolimenu);
+        Blade::component('polimenu-menu', Menu::class);
     }
 
     protected function getAssetPackageName(): ?string
