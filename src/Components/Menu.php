@@ -1,5 +1,4 @@
 <?php
-
 namespace Detit\Polimenu\Components;
 use Illuminate\View\Component;
 use Detit\Polimenu\Models\Menu as Model;
@@ -7,13 +6,41 @@ use Detit\Polimenu\Models\Menu as Model;
 class Menu extends Component
 {
     public $menuItems;
+    public $hasChildren;
+    public $getChildren;
+    public $getName;
+    public $getUrl;
+    public $getTarget;
 
     public function __construct($handle)
     {
         $menu = Model::where('handle', $handle)->firstOrFail();
-        $items = $menu->items;  // Presumendo che `items` sia un array
-        $locale = app()->getLocale();
-        $this->menuItems = $this->formatMenuItems($items, $locale);
+
+        if($menu->is_published === 0) {
+            $this->menuItems = [];
+        }else{
+            $this->menuItems = collect($menu->items)->all();
+        }
+
+        $this->hasChildren = function($item) {
+            return !empty($item['children']);
+        };
+
+        $this->getChildren = function($item) {
+            return $item['children'] ?? [];
+        };
+
+        $this->getName = function($item) {
+            return $item['name'];
+        };
+
+        $this->getUrl = function($item) {
+            return $item['url'];
+        };
+
+        $this->getTarget = function($item) {
+            return $item['target'];
+        };
     }
 
     public function render()
@@ -21,9 +48,5 @@ class Menu extends Component
         return view('polimenu::components.menu', ['menuItems' => $this->menuItems]);
     }
 
-    private function formatMenuItems($items, $locale)
-    {
-        // La logica per formattare i menu in base alla lingua
-        return $items;  // Questa è solo una parte della logica
-    }
+
 }

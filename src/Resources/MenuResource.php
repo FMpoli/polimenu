@@ -2,22 +2,25 @@
 
 namespace Detit\Polimenu\Resources;
 
-use Filament\Forms;
 use Filament\Tables;
-use Filament\Resources\Resource;
-use Detit\Polimenu\Models\Menu;
-
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Illuminate\Support\Str;
+use Detit\Polimenu\Models\Menu;
+use Filament\Resources\Resource;
+use Illuminate\Support\HtmlString;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
+use Illuminate\Support\Facades\Blade;
+use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Concerns\Translatable;
+use Saade\FilamentAdjacencyList\Forms\Components\AdjacencyList;
 
 class MenuResource extends Resource
 {
@@ -33,61 +36,59 @@ class MenuResource extends Resource
 
     protected static ?string $navigationGroup = 'Navigation';
 
-        public static function form(Form $form): Form
+    public static function form(Form $form): Form
     {
         return $form
-        ->schema([
-            Section::make('Menu Information')
+    ->schema([
+        Section::make('Menu Information')
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->live(debounce: 500)
-                            ->autocapitalize('words')
-                            ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
-                                $name = $state;
-                                $handle = Str::slug($name);
-                                $set('handle', $handle);
-                            })
-                    ->columnSpan(1)
-                    ->maxLength(255),
-                TextInput::make('handle')
-                    ->required()
-                    ->columnSpan(1)
-                    ->maxLength(255),
-                Repeater::make('items')
-                    ->defaultItems(0)
-                    ->columnSpan(2)
+                Grid::make(3)
                     ->schema([
-                        TextInput::make('name')
-                            ->required()
-                            ->live(debounce: 500)
-                            ->autocapitalize('words')
-                            ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
-                                $name = $state;
-                                $lastName = $get('last_name');
-                                $slug = Str::slug($name . ' ' . $lastName);
-                                $set('slug', $slug);
-                            })
-                            ->columnSpan(1)
-                            ->maxLength(255),
-                        Select::make('target')
-                            ->required()
-                            ->columnSpan(1)
-                            ->options(
-                                [
-                                    '_self' => 'Same tab',
-                                    '_blank' => 'New tab',
-                                ]
-                            ),
-                        TextInput::make('url')
-                            ->required()
-                            ->columnSpan(1)
-                    ])->columns(3),
-                Toggle::make('is_published')
-                    ->columnSpan(1)
-                    ->default(true),
-            ])->columns(2),
-            ]);
+                        // Colonna sinistra
+                        Section::make()
+                            ->schema([
+                                TextInput::make('name')
+                                    ->required()
+                                    ->live(debounce: 500)
+                                    ->autocapitalize('words')
+                                    ->afterStateUpdated(function (Get $get, Set $set, ?string $old, ?string $state) {
+                                        $name = $state;
+                                        $handle = Str::slug($name);
+                                        $set('handle', $handle);
+                                    })
+                                    ->maxLength(255),
+                                TextInput::make('handle')
+                                    ->required()
+                                    ->maxLength(255),
+                                Toggle::make('is_published')
+                                    ->default(true),
+                        ])->columnSpan(1),
+
+                        // Colonna destra
+                        Section::make()
+                            ->schema([
+                                AdjacencyList::make('items')
+                                    ->maxDepth(1)
+                                    ->labelKey('name')
+                                    ->form([
+                                        TextInput::make('name')
+                                            ->required()
+                                            ->live(debounce: 500)
+                                            ->autocapitalize('words')
+                                            ->maxLength(255),
+                                        Select::make('target')
+                                            ->required()
+                                            ->options([
+                                                '_self' => 'Same tab',
+                                                '_blank' => 'New tab',
+                                            ]),
+                                        TextInput::make('url')
+                                            ->required(),
+                                    ]),
+                            ])->columnSpan(2),
+                        ]),
+            ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -97,7 +98,19 @@ class MenuResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('handle')
-                    ->searchable(),
+                    ->label('Component')
+                    ->formatStateUsing(function ($state) {
+                        return new HtmlString(
+                            Blade::render("&lt;x-polimenu-menu handle=\"$state\" /&gt;")
+                        );
+                    })
+                    ->html()
+                    ->color('primary')
+                    ->badge()
+                    ->copyable()
+                    ->copyMessage('Component copied to clipboard')
+                    ->copyMessageDuration(1500)
+                    ->copyableState(fn (string $state): string => "<x-poli-menu hendle='{$state}' />"),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
