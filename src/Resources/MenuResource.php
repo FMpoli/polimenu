@@ -110,7 +110,7 @@ class MenuResource extends Resource
                     ->copyable()
                     ->copyMessage('Component copied to clipboard')
                     ->copyMessageDuration(1500)
-                    ->copyableState(fn (string $state): string => "<x-poli-menu hendle='{$state}' />"),
+                    ->copyableState(fn (string $state): string => "<x-polimenu-menu handle='{$state}' />"),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
