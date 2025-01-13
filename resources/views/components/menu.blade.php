@@ -94,7 +94,7 @@ $currentLanguage = $availableLocales[$currentLocale] ?? $availableLocales['en'];
                                 @foreach($getChildren($item) as $child)
                                     <a href="{{ $child['url'] }}"
                                         target="{{ $child['target'] ?? '_self' }}"
-                                        class="block px-4 py-2 text-sm text-secondary hover:bg-primary/10 dark:text-gray-300 dark:hover:bg-gray-700">
+                                        class="block px-4 py-2 text-sm rounded-md hover:rounded-md text-secondary hover:bg-primary/10 dark:text-gray-300 dark:hover:bg-gray-700">
                                         {{ $child['name'] }}
                                     </a>
                                 @endforeach
