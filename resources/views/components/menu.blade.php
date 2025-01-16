@@ -102,35 +102,7 @@ $currentLanguage = $availableLocales[$currentLocale] ?? $availableLocales['en'];
                         </div>
                     @endif
                 @endforeach
-                @if(count($availableLocales) > 1)
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-secondary hover:bg-primary/10 hover:text-primary">
-                            {{ $currentLanguage }}
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div x-show="open"
-                            x-transition:enter="transition ease-out duration-200"
-                            x-transition:enter-start="opacity-0 scale-95"
-                            x-transition:enter-end="opacity-100 scale-100"
-                            x-transition:leave="transition ease-in duration-150"
-                            x-transition:leave-start="opacity-100 scale-100"
-                            x-transition:leave-end="opacity-0 scale-95"
-                            class="absolute right-0 z-50 w-48 mt-2 bg-white rounded-lg shadow-lg dark:bg-gray-800"
-                            style="display: none;">
-                            @foreach($availableLocales as $locale => $language)
-                                @if($locale !== $currentLocale)
-                                    <a href="{{ route('locale.set', $locale) }}"
-                                        class="block px-4 py-2 text-sm text-secondary hover:bg-primary/10 dark:text-gray-300 dark:hover:bg-gray-700">
-                                        {{ $language }}
-                                    </a>
-                                @endif
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
+                <livewire:language-switcher />
             </div>
 
             <!-- Mobile menu toggle -->
